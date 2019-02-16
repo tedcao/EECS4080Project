@@ -16,14 +16,14 @@ add_action('admin_menu', 'abac_setup_menu');
  
 //add page to this plugin page
 function abac_setup_menu(){
-    add_menu_page( 'ABAC page', 'Current role information', 'read', 'ABAC_menu', 'main_function' );
+    add_menu_page( 'ABAC page', 'Current role information', 'read', 'ABAC_menu', 'current_role_information' );
     add_submenu_page( 'ABAC_menu', 'Request permission', 'Request Permission', 'edit_published_posts', 'Request permission', 'request_permission' );
     add_submenu_page( 'ABAC_menu', 'Assign tasks', 'Assign Tasks', 'edit_published_posts', 'Assign Tasks', 'assign_task' );
 }
 
  
 //listing all the user information who logged in
-function main_function(){
+function current_role_information(){
     $current_user = wp_get_current_user();
     echo 'Username: ' . $current_user->user_login . '<br />';
     echo 'User email: ' . $current_user->user_email . '<br />';
