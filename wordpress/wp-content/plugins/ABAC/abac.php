@@ -16,8 +16,11 @@ add_action('admin_menu', 'abac_setup_menu');
  
 //add page to this plugin page
 function abac_setup_menu(){
-    add_menu_page( 'ABAC page', 'ABAC', 'manage_options', 'test-plugin', 'main_function' );
+    add_menu_page( 'ABAC page', 'Current role information', 'read', 'ABAC_menu', 'main_function' );
+    add_submenu_page( 'ABAC_menu', 'Request permission', 'Request Permission', 'edit_published_posts', 'Request permission', 'request_permission' );
+    add_submenu_page( 'ABAC_menu', 'Assign tasks', 'Assign Tasks', 'edit_published_posts', 'Assign Tasks', 'assign_task' );
 }
+
  
 //listing all the user information who logged in
 function main_function(){
@@ -50,6 +53,14 @@ function restrictly_get_current_user_role() {
       return false;
     }
    }
+
+function request_permission(){
+    echo "Request permission page";
+}
+
+function assign_task(){
+    echo "Assign task page";
+}
 
 
 //get current role and capability and save it, create a new role with nre set of permissions and assign to this user for 2 h. after 2h, 
