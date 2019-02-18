@@ -11,6 +11,8 @@ Author URI:
 
 <?php
 //first of first, we might need to create many roles for different users. We can not use current role system cuz add role have global influence. 
+include 'assign_permission.php';
+include 'request_permission.php';
 
 add_action('admin_menu', 'abac_setup_menu');
  
@@ -53,19 +55,6 @@ function restrictly_get_current_user_role() {
       return false;
     }
    }
-
-function request_permission(){
-    echo "Request permission page";
-}
-
-function assign_task(){
-    echo "Assign task page";
-}
-
-
-//get current role and capability and save it, create a new role with nre set of permissions and assign to this user for 2 h. after 2h, 
-//role deleted and origional role assign back. 
-
 ?>
 
 <?php
