@@ -47,6 +47,6 @@ function request_permission(){
         }
     }
 
-    
+    //判断当前页面的权限需求是否为legal的，通过判断在task table 中是否存在这一条项目
 
 ?>
