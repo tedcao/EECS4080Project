@@ -3,54 +3,50 @@ function assign_task(){
     ?>
     <h1>Assign task page</h1>
     <?php
-    // get current user name
+        // Grab current user information.
         $current_user = wp_get_current_user();
         $currentUser = $current_user->user_login;
-
-    //database connection
-        require_once("connect-db.php");
-
-        // Grab current user information.
         echo "<h3>You information</h3>";
-        $userInfo = "SELECT * FROM `wp_users` WHERE `user_login` = '$currentUser'";
-        $row;
-        if ($result = mysqli_query($dbLocalhost, $userInfo))
-        {
-            while ($row = mysqli_fetch_row($result))
-            {
-                echo "<p>Name: $row[4]</p>";
-                echo "<p>User Login: $row[1]</p>";
-                echo "<p>User Email: $row[5]</p>";
-                echo "<p>Supervisor: $row[6]</p>";
+        echo 'Username: ' . $current_user->user_login . '<br />';
+        echo 'User email: ' . $current_user->user_email . '<br />';
+        echo 'User first name: ' . $current_user->user_firstname . '<br />';
+        echo 'User last name: ' . $current_user->user_lastname . '<br />';
+        echo 'User display name: ' . $current_user->display_name . '<br />';
+        echo 'User ID: ' . $current_user->ID . '<br />';
 
-            // check who gets supervise by the current user.
-                echo "<h3>You are supervising the following users</h3>";
-                $supervisorOf = "SELECT * FROM `wp_users` WHERE `supervisor`='$row[4]'";
-                if ($info = mysqli_query($dbLocalhost, $supervisorOf))
-                {
-                    while ($array = mysqli_fetch_row($info))
-                    {
-                        echo "<input type='checkbox' name='full_name'>Name: $array[4]";
-                        echo "<p>User login: $array[1]</p>";
-                        echo "<p><nbsp><nbsp>User email: $array[5]</p>";
-                        echo "<p><nbsp><nbsp>Supervisor: $array[6]</p>";
-                      
-                    }
+        
+        //database connection
+        $dbLocalhost = mysqli_connect("localhost", "root", "", "wordpress")
+        or die("Could not connect: " . mysql_error());
+
+        // check who gets supervise by the current user.
+            echo "<h3>You are supervising the following users</h3>";
+            $supervisorOf = "SELECT `user_login` FROM `wp_users` WHERE `supervisor`='$currentUser'";
+            if ($info = mysqli_query($dbLocalhost, $supervisorOf))
+            {
+                echo '<form action="" method="post">';
+                echo '<div class="form-group">';
+                echo '<label for="user">Please select the user you want to assign task to </label>';
+                echo "<select name='user' class='form-control'>";
+
+               $userInfo = mysqli_fetch_assoc($info);
+                foreach($userInfo as $user_info) {
+                    echo "<option value='".$user_info."'>".$user_info."</option>";
                 }
-                else
-                {
-                    echo mysqli_error($dbLocalhost);
-                }
+                echo '<br>';
+                echo "</select><br>";
+                echo '<input class="btn btn-primary btn-lg btn-block" type="submit" value="Submit">';
+                echo '</div>';
+                echo '</form>';
             }
-        }
-        else
-        {
-            echo mysqli_error($dbLocalhost);
-        }
+            else
+            {
+                echo mysqli_error($dbLocalhost);
+            }  
 
 
         //task information
-        
+
 
 
         // get current user permission and permission of user that gets assign to task has. Find the difference, and list them.
