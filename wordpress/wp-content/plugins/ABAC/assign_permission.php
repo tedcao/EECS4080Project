@@ -16,7 +16,7 @@ function assign_task(){
 
         
         //database connection
-        $dbLocalhost = mysqli_connect("localhost", "root", "", "wordpress")
+        $dbLocalhost = mysqli_connect("localhost", "root", "root", "wordpress")
         or die("Could not connect: " . mysql_error());
 
         // check who gets supervise by the current user.
