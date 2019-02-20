@@ -92,11 +92,11 @@ function assign_task(){
                 $current_user_name = $_POST['current_user_name'];
             }
             if (!empty($current_selected_permissions) && !empty($task_description) && !empty($currentUser)){
-    //            echo $current_selected_permissions;
-    //            echo $task_description;
-    //            echo $currentUser;
-                $currentTime = date('Y-m-d h:i:s', time());
-    //            echo $currentTime;
+    /*            echo $current_selected_permissions;
+                echo $task_description;
+                echo $currentUser;
+                echo $currentTime;*/
+                
                 //Adds the information to database, thus task assigned.
                 $taskInfo = "INSERT INTO `wp_task` VALUES ('','$currentUser','$current_user_name','$current_selected_permissions','$task_description', CURRENT_TIMESTAMP)";
                 if ($result = mysqli_query($dbLocalhost, $taskInfo))
