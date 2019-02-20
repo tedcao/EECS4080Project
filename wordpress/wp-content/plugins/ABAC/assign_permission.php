@@ -1,12 +1,10 @@
 <?php
 global $current_user, $selected_user, $task_description, $current_selected_permissions, $time;
-
 function connect_sql(){
     $dbLocalhost = mysqli_connect("localhost", "root", "root", "wordpress")
         or die("Could not connect: " . mysql_error());
     return $dbLocalhost;
 }
-
 function print_current_user_information(){
         // Grab current user information and print out all the information.
         $current_user = wp_get_current_user();
@@ -20,8 +18,6 @@ function print_current_user_information(){
         echo 'User ID: ' . $current_user->ID . '<br />';
         return $currentUser;
 }
-
-
 function assign_task(){
     ?>
     <h1>Assign task page</h1>
@@ -30,7 +26,6 @@ function assign_task(){
         $currentUser = print_current_user_information();
         //database connection
         $dbLocalhost = connect_sql();
-
         // check who gets supervise by the current user.
             
             $supervisorOf = "SELECT `user_login` FROM `wp_users` WHERE `supervisor`='$currentUser'";
@@ -62,7 +57,6 @@ function assign_task(){
             echo '<input class="btn btn-primary btn-lg btn-block" type="submit" value="Select the person you want to assign task.">';
             echo '</div>';
             echo '</form>';
-
             //if exist valid input, then assign value to $user and show the list of the permissions
             if(isset($_POST['user'])) {
                 $selected_user =$_POST["user"];
@@ -85,29 +79,38 @@ function assign_task(){
                     echo "<option value='".$diff_permissions."'>".$diff_permissions."</option>";
                 }
                 echo '</select><br>';
-
-
                 echo '<label class="sr-only" for="task_description">Please enter the task description.</label>';
                 echo '<input type="text" class="form-control" name="task_description" placeholder="Please enter the task description."><br>';
                 echo '<input class="btn btn-primary btn-lg btn-block" type="submit" value="Submit">';
                 echo '</div>';
                 echo '</form>';
             }
-
             //assign selected permission and task information
             if(isset($_POST['current_selected_permissions'],$_POST['task_description'],$_POST['current_user_name'])){
                 $current_selected_permissions=$_POST['current_selected_permissions'];
                 $task_description=$_POST['task_description'];
                 $current_user_name = $_POST['current_user_name'];
             }
-
             if (!empty($current_selected_permissions) && !empty($task_description) && !empty($currentUser)){
-                echo $current_selected_permissions;
-                echo $task_description;
-                echo $currentUser;
-                echo date('Y-m-d h:i:s', time());
+    //            echo $current_selected_permissions;
+    //            echo $task_description;
+    //            echo $currentUser;
+                $currentTime = date('Y-m-d h:i:s', time());
+    //            echo $currentTime;
+                //Adds the information to database, thus task assigned.
+                $taskInfo = "INSERT INTO `wp_task` VALUES ('','$currentUser','$current_user_name','$current_selected_permissions','$task_description', CURRENT_TIMESTAMP)";
+                if ($result = mysqli_query($dbLocalhost, $taskInfo))
+                {
+                    echo "<p>Task has been assigned.</p>";
+                }
+                else
+                {
+                    echo "<p>Error, task haven't been assigned.</p>";
+                    echo mysqli_error($dbLocalhost);
+                }
+
+
             }
             
 }
-
 ?>
