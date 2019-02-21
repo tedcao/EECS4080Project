@@ -6,16 +6,17 @@ function connect_sql(){
     return $dbLocalhost;
 }
 function print_current_user_information(){
+
         // Grab current user information and print out all the information.
         $current_user = wp_get_current_user();
         $currentUser = $current_user->user_login;
-        echo "<h3>You information</h3>";
-        echo 'Username: ' . $current_user->user_login . '<br />';
-        echo 'User email: ' . $current_user->user_email . '<br />';
-        echo 'User first name: ' . $current_user->user_firstname . '<br />';
-        echo 'User last name: ' . $current_user->user_lastname . '<br />';
-        echo 'User display name: ' . $current_user->display_name . '<br />';
-        echo 'User ID: ' . $current_user->ID . '<br />';
+        echo "<h3>Your information</h3>";
+        echo '<b>Username: </b>' . $current_user->user_login . '<br />';
+        echo '<b>User email: </b>' . $current_user->user_email . '<br />';
+        echo '<b>User first name: </b>' . $current_user->user_firstname . '<br />';
+        echo '<b>User last name: </b>' . $current_user->user_lastname . '<br />';
+        echo '<b>User display name: </b>' . $current_user->display_name . '<br />';
+        echo '<b>User ID: </b>' . $current_user->ID . '<br />';
         return $currentUser;
 }
 function assign_task(){
@@ -30,7 +31,7 @@ function assign_task(){
             
             $supervisorOf = "SELECT `user_login` FROM `wp_users` WHERE `supervisor`='$currentUser'";
             if ($info = mysqli_query($dbLocalhost, $supervisorOf)){      
-                echo '<h4>Data retrived successfully</h4>';
+            //    echo '<h4>Data retrived successfully</h4>';
                 echo "<h3>You are supervising the following users</h3>";
                 $userInfo = mysqli_fetch_assoc($info);
                 foreach($userInfo as $user_info){
@@ -47,6 +48,7 @@ function assign_task(){
         
             echo '<form name = "first" action="" method="post">';
             echo '<div class="form-group">';
+            echo "<br />";
             echo '<label for="user">Please select the user you want to assign task to </label>';
             echo "<select name='user' class='form-control'>";
             foreach($userInfo as $user_info) {
@@ -96,7 +98,7 @@ function assign_task(){
                 echo $task_description;
                 echo $currentUser;
                 echo $currentTime;*/
-                
+
                 //Adds the information to database, thus task assigned.
                 $taskInfo = "INSERT INTO `wp_task` VALUES ('','$currentUser','$current_user_name','$current_selected_permissions','$task_description', CURRENT_TIMESTAMP)";
                 if ($result = mysqli_query($dbLocalhost, $taskInfo))
