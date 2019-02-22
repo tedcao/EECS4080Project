@@ -72,11 +72,11 @@ function assign_task(){
                 echo '<div class="form-group">';
                 echo '<label for="current_selected_permissions">Please select the permission you want to assign the person. </label><br>';
                 
-                echo "<select name='current_selected_permissions' class='form-control'>";
+                echo "<select name='current_user_name' class='form-control'>";
                 echo "<option value='".$selected_user."'>".$selected_user."</option>";
                 echo "</select><br>";
                 
-                echo "<select name='current_user_name' class='form-control'>";
+                echo "<select name='current_selected_permissions' class='form-control'>";
                 foreach($diff as $diff_permissions){
                     echo "<option value='".$diff_permissions."'>".$diff_permissions."</option>";
                 }
@@ -93,13 +93,8 @@ function assign_task(){
                 $task_description=$_POST['task_description'];
                 $current_user_name = $_POST['current_user_name'];
             }
-            if (!empty($current_selected_permissions) && !empty($task_description) && !empty($currentUser)){
-    /*            echo $current_selected_permissions;
-                echo $task_description;
-                echo $currentUser;
-                echo $currentTime;*/
 
-                //Adds the information to database, thus task assigned.
+            if (!empty($current_selected_permissions) && !empty($task_description) && !empty($currentUser)){
                 $taskInfo = "INSERT INTO `wp_task` VALUES ('','$currentUser','$current_user_name','$current_selected_permissions','$task_description', CURRENT_TIMESTAMP)";
                 if ($result = mysqli_query($dbLocalhost, $taskInfo))
                 {
@@ -110,8 +105,6 @@ function assign_task(){
                     echo "<p>Error, task haven't been assigned.</p>";
                     echo mysqli_error($dbLocalhost);
                 }
-
-
             }
             
 }
