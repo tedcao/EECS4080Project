@@ -1,12 +1,11 @@
 <?php
-global $current_user, $selected_user, $task_description, $current_selected_permissions, $time;
+global $current_user, $selected_user, $task_description, $current_selected_permissions, $current_user_name, $time;
 function connect_sql(){
     $dbLocalhost = mysqli_connect("localhost", "root", "root", "wordpress")
         or die("Could not connect: " . mysql_error());
     return $dbLocalhost;
 }
 function print_current_user_information(){
-
         // Grab current user information and print out all the information.
         $current_user = wp_get_current_user();
         $currentUser = $current_user->user_login;
@@ -93,7 +92,6 @@ function assign_task(){
                 $task_description=$_POST['task_description'];
                 $current_user_name = $_POST['current_user_name'];
             }
-
             if (!empty($current_selected_permissions) && !empty($task_description) && !empty($currentUser)){
                 $taskInfo = "INSERT INTO `wp_task` VALUES ('','$currentUser','$current_user_name','$current_selected_permissions','$task_description', CURRENT_TIMESTAMP)";
                 if ($result = mysqli_query($dbLocalhost, $taskInfo))
@@ -105,7 +103,19 @@ function assign_task(){
                     echo "<p>Error, task haven't been assigned.</p>";
                     echo mysqli_error($dbLocalhost);
                 }
-            }
-            
+            }            
 }
+
+            // adds the selected_permission to the selected user for 2 hours.
+            function add_selected_permission()
+            {
+                $start_time = time();
+                $current_user_name->add_cap('$current_selected_permissions');
+
+                if((time() - $start_time) > 7200) {
+                    $current_user_name->remove_cap('$current_selected_permissions');
+                }
+                
+            }
+
 ?>
