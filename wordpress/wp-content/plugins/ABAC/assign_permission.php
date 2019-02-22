@@ -96,7 +96,7 @@ function assign_task(){
                 $taskInfo = "INSERT INTO `wp_task` VALUES ('','$currentUser','$current_user_name','$current_selected_permissions','$task_description', CURRENT_TIMESTAMP)";
                 if ($result = mysqli_query($dbLocalhost, $taskInfo))
                 {
-                    echo "<p>Task has been assigned.</p>";
+                    echo "<p>Task has been assigned.</p>";       
                 }
                 else
                 {
@@ -106,16 +106,5 @@ function assign_task(){
             }            
 }
 
-            // adds the selected_permission to the selected user for 2 hours.
-            function add_selected_permission()
-            {
-                $start_time = time();
-                $current_user_name->add_cap('$current_selected_permissions');
-
-                if((time() - $start_time) > 7200) {
-                    $current_user_name->remove_cap('$current_selected_permissions');
-                }
-                
-            }
 
 ?>
