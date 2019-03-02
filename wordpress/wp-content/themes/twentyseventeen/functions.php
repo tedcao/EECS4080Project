@@ -642,3 +642,35 @@ function store_last_login($current_user) {
     $user = $current_user->user_login;
     update_user_meta($current_user->ID, 'last_login', current_time('mysql', 1));
 }
+
+add_action('wp_login', 'store_last_login', 10, 2);
+
+//check permission after each login and delete the correspond expired login 
+function check_permission_expire(){
+
+
+	// $current_user = wp_get_current_user();
+
+	// $role = get_role($current_user);
+	// $role->remove_cap("manage_categories");
+
+	// $conn = connect_sql();
+	// $sql_select = "SELECT `working_time`,`permission` FROM `wp_task` WHERE `receiver` = '$current_user'";
+	// $result = $conn->query($sql_select);
+
+	// if ($result->num_rows > 0) {
+	// 	// output data of each row
+	// 	while($row = $result->fetch_assoc()) {
+	// 		if (CURRENT_TIMESTAMP - $row["working_time"] > 400){
+	// 			$role = get_role($current_user);
+	// 			$permission = $row["permission"];
+	// 			$role->remove_cap($permission);  //delete this line
+	// 		}
+	// 		else{
+	// 			echo "<h1>Still have time on permission: ".$permission."</h1>";
+	// 		}
+	// 	}
+	// } else {
+	// }
+	// mysqli_close($dbLocalhost);
+}

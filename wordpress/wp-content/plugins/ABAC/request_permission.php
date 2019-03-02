@@ -44,8 +44,8 @@ require_once("assign_permission.php");
         echo '</div>';
         //assigner
         echo '<div class="col-sm-4">';
-        echo '<label for="audit_user_assigne_job">Who assign you the task ?</label>';
-        echo "<select name='audit_user_assigne_job' id='audit_user_assigne_job' class='form-control'>";
+        echo '<label for="job_assigner_audit">Who assign you the task ?</label>';
+        echo "<select name='job_assigner_audit' id='job_assigner_audit' class='form-control'>";
         $users = get_users( 'blog_id=1' );
         foreach ($users as $online) {
             echo "<option value='".$online->user_login."'>".$online->user_login."</option>";
@@ -63,11 +63,11 @@ require_once("assign_permission.php");
         echo '</div>';
 
 
-        if(isset($_POST['permissions']) && isset($_POST['audit_user_assigne_job']) && isset($_POST['request_permission_time']) ) {
+        if(isset($_POST['permissions']) && isset($_POST['job_assigner_audit']) && isset($_POST['request_permission_time']) ) {
             $permissions=$_POST["permissions"];
-            $audit_user_assigne_job=$_POST["audit_user_assigne_job"];
+            $job_assigner_audit=$_POST["job_assigner_audit"];
             $request_permission_time=$_POST["request_permission_time"];
-            assignPermission($current_user, $permissions, $audit_user_assigne_job, $request_permission_time);
+            assignPermission($current_user, $permissions, $job_assigner_audit, $request_permission_time);
         }
     }
 
@@ -114,21 +114,54 @@ require_once("assign_permission.php");
 
 
 //assign permission to user
-    function assignPermission($receiver, $permission, $audit_user_assigne_job, $request_permission_time){
+    function assignPermission($receiver, $permission, $job_assigner_audit, $request_permission_time){
         //check whether task with these permission exist
         if(task_existing($receiver, $permission)){
-            check_working($receiver, $permission);
+            echo "pass task check";
+            echo "<br>";
+            if(check_working($job_assigner_audit)){
+                echo "pass working time check";
+                echo "<br>";
+                if (check_working_location()){
+                    echo "pass location check";
+                    echo "<br>";
+                    add_permission($receiver,$permission);
+                }else{
+                    echo "fail location check, Please check with your task assigner";
+                    echo "<br>";
+                }
+            }else{
+                echo "fail working time check, Please check with your task assigner";
+                echo "<br>";
+            }
         }else{
-            echo 111;
-        }
+            echo "fail task check";
+            check_assigner_permission($receiver,$job_assigner_audit,$request_permission_time);
 
-        // $role = get_role($receiver);
-        // $current_time = time();
-        // // $role->add_cap($permission);
+        }
 
         // $current_user = wp_get_current_user()->user_login;
         // $current_capability = array_keys(get_role(restrictly_get_current_user_role())->capabilities);
         // printCurrentPermissions($current_capability,$current_user);   
+    }
+
+//add permission to user
+    function add_permission($receiver,$permission){
+        $role = get_role($receiver);
+        $current_time = time();
+        $role->add_cap($permission);
+       
+        // $role->remove_cap($permission);  //command this line
+
+        $dbLocalhost = connect_sql();
+        $sql_task = "UPDATE `wp_task` SET `working_time`=CURRENT_TIMESTAMP WHERE `receiver` = '$receiver'AND `permission` = '$permission'";
+
+        if ($dbLocalhost->query($sql_task) === TRUE) {
+            echo "<h3>You are going to have this permission for 2 Hours</h3>";
+        } else {
+            echo "Error updating record: " . $dbLocalhost->error;
+        }
+        mysqli_close($dbLocalhost);
     }
 
 //check whether task existing for this receiver with permission
@@ -146,9 +179,22 @@ require_once("assign_permission.php");
 
 
 //check whether task assigner is working
-    function check_working($receiver, $permission){
-
+    function check_working($job_assigner_audit){
         $online_users = online_users();
+        if (in_array($job_assigner_audit, $online_users)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+//check working location (not donw yet)
+    function check_working_location(){
+        return true; //always pass for now. 
+    }
+
+    function check_assigner_permission($receiver,$job_assigner_audit,$request_permission_time){
+        echo "Request will be send to your IT manager.";
     }
 
 //return online users (last log_in in 30 mins. )
@@ -164,7 +210,7 @@ require_once("assign_permission.php");
             $minutesSinceLogin = $since_start->i;
         
             // list every user and whether they logged in within the last 30 minutes
-            if ($minutesSinceLogin > 30 ) {
+            if ($minutesSinceLogin > 15 ) {
                 
             } else { 
                 array_push($online_users,$online->user_login);
