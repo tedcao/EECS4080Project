@@ -633,3 +633,12 @@ require get_parent_theme_file_path( '/inc/customizer.php' );
  * SVG icons functions and filters.
  */
 require get_parent_theme_file_path( '/inc/icon-functions.php' );
+
+// Ted functions: 2019-09-02
+add_action('wp_login', 'store_last_login', 10, 2);
+
+function store_last_login($current_user) {
+    $current_user = wp_get_current_user();
+    $user = $current_user->user_login;
+    update_user_meta($current_user->ID, 'last_login', current_time('mysql', 1));
+}
