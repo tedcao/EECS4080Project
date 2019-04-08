@@ -18,7 +18,7 @@ add_action('admin_menu', 'abac_setup_menu');
  
 //add page to this plugin page
 function abac_setup_menu(){
-    add_menu_page( 'ABAC page', 'Current role information', 'read', 'ABAC_menu', 'current_role_information' );
+    add_menu_page( 'ABAC page', 'Advanced Access Control', 'read', 'ABAC_menu', 'current_role_information' );
     add_submenu_page( 'ABAC_menu', 'Request permission', 'Request Permission', 'edit_published_posts', 'Request permission', 'request_permission' );
     add_submenu_page( 'ABAC_menu', 'Assign tasks', 'Assign Tasks', 'edit_published_posts', 'Assign Tasks', 'assign_task' );
 }
