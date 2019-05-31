@@ -1,4 +1,5 @@
-# EECS4080Project
+# Research Paper and mock plugin
+(EECS 4080)
 Wordpress plugin transfer RBAC to ABAC
 
 Paper published in 
